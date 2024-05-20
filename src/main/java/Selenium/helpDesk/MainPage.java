@@ -1,6 +1,6 @@
-package helpDesk;
+package Selenium.helpDesk;
 
-import Core.BasePage;
+import Selenium.Core.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;

@@ -1,4 +1,4 @@
-package helpers;
+package Selenium.helpers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

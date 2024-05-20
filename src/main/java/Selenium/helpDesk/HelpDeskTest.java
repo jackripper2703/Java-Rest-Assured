@@ -1,11 +1,11 @@
-package helpDesk;
+package Selenium.helpDesk;
 
-import Core.BaseTest;
-import helpers.TestValues;
+import Selenium.Core.BaseTest;
+import Selenium.helpers.TestValues;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static helpers.StringModifier.UniqueString;
+import static Selenium.helpers.StringModifier.UniqueString;
 
 public class HelpDeskTest extends BaseTest {
 

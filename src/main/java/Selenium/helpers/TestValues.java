@@ -1,4 +1,4 @@
-package helpers;
+package Selenium.helpers;
 
 public class TestValues {
     public static String TEST_BODY = "Описание задачи";

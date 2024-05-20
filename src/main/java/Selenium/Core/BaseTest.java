@@ -4,7 +4,7 @@
  А так же передаеются параметры, такие как размер экрана браузера и время ожидания
 */
 
-package Core;
+package Selenium.Core;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.After;

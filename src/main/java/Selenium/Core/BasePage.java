@@ -1,4 +1,4 @@
-package Core;
+package Selenium.Core;
 
 import org.openqa.selenium.WebDriver;
 
