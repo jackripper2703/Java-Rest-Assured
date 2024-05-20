@@ -1,6 +1,8 @@
-package Selenium.helpDesk;
+package Selenium;
 
 import Selenium.Core.BaseTest;
+import Selenium.helpDesk.MainPage;
+import Selenium.helpDesk.TicketPage;
 import Selenium.helpers.TestValues;
 import org.junit.Assert;
 import org.junit.Test;

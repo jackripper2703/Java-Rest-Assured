@@ -1,4 +1,4 @@
-package RestAssred;
+package RestAssred.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

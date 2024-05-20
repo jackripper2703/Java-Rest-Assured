@@ -23,17 +23,21 @@
 
 package RestAssred;
 
+import RestAssred.helper.Specification;
+import RestAssred.request.Register;
+import RestAssred.request.UserTime;
+import RestAssred.response.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.time.Clock;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static RestAssred.helper.ConfigProvider.*;
 import static io.restassured.RestAssured.given;
 
 public class TestAPI {
-    private final static String URL = "https://reqres.in/";
 
     @Test
     public void checkAvatarAndIdTest(){
@@ -125,8 +129,7 @@ public class TestAPI {
 
         String regexServer = "(.{6})$";
         String regexClient = "(.{12})$";
-        String currentTime = Clock.systemUTC().instant().toString().replaceAll(regexClient, "");
-
-        Assert.assertEquals(currentTime, time.getUpdatedAt().replaceAll(regexServer, ""));
+        String now = Instant.now().toString().replaceAll(regexClient, "");
+        Assert.assertEquals(now, time.getUpdatedAt().replaceAll(regexServer, ""));
     }
 }
