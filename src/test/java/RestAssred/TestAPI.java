@@ -27,8 +27,7 @@ import RestAssred.helper.Specification;
 import RestAssred.request.Register;
 import RestAssred.request.UserTime;
 import RestAssred.response.*;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -39,8 +38,19 @@ import static io.restassured.RestAssured.given;
 
 public class TestAPI {
 
+    private String afterEachInfo;
+
+    @AfterEach
+    public void rename(){
+        afterEachInfo = "Код срабатывает в начале каждого тестового метода" + Instant.now().toString();
+    }
+
     @Test
+    @DisplayName("Тест 1")
     public void checkAvatarAndIdTest(){
+
+        System.out.println(afterEachInfo);
+
         Specification.installSpec(Specification.requestSpec(URL),Specification.responseSpec(200));
         List<UserDate> users = given()
                 .when()
@@ -51,12 +61,16 @@ public class TestAPI {
         List<String> avatars = users.stream().map(UserDate::getAvatar).collect(Collectors.toList());
         List<String> ids = users.stream().map(x->x.getId().toString()).collect(Collectors.toList());
         for (int i = 0; i < avatars.size(); i++) {
-            Assert.assertTrue(avatars.get(i).contains(ids.get(i)));
+            Assertions.assertTrue(avatars.get(i).contains(ids.get(i)));
         }
     }
 
     @Test
+    @DisplayName("Тест 2")
     public void successRegTest(){
+
+        System.out.println(afterEachInfo);
+
         Specification.installSpec(Specification.requestSpec(URL),Specification.responseSpec(200));
         Integer id = 4;
         String token = "QpwL5tke4Pnpja7X4";
@@ -68,15 +82,19 @@ public class TestAPI {
                 .then().log().all()
                 .extract().as(SuccessReg.class);
 
-        Assert.assertNotNull(successReg.getId());
-        Assert.assertNotNull(successReg.getToken());
+        Assertions.assertNotNull(successReg.getId());
+        Assertions.assertNotNull(successReg.getToken());
 
-        Assert.assertEquals(id, successReg.getId());
-        Assert.assertEquals(token, successReg.getToken());
+        Assertions.assertEquals(id, successReg.getId());
+        Assertions.assertEquals(token, successReg.getToken());
     }
 
     @Test
+    @DisplayName("Тест 3")
     public void unSuccessRegTest() {
+
+        System.out.println(afterEachInfo);
+
         Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(400));
         Register user = new Register("eve.holt@reqres.in", "");
         UnSuccessReg unSuccessReg = given()
@@ -86,12 +104,13 @@ public class TestAPI {
                 .then().log().all()
                 .extract().as(UnSuccessReg.class);
 
-        Assert.assertNotNull(unSuccessReg.getError());
+        Assertions.assertNotNull(unSuccessReg.getError());
 
-        Assert.assertEquals("Missing password", unSuccessReg.getError());
+        Assertions.assertEquals("Missing password", unSuccessReg.getError());
     }
 
     @Test
+    @DisplayName("Тест 4")
     public void sortedYearsTest() {
         Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(200));
 
@@ -103,10 +122,11 @@ public class TestAPI {
         List<Integer> years = colors.stream().map(ColorsData::getYear).collect(Collectors.toList());
         List<Integer> sortedYears = years.stream().sorted().collect(Collectors.toList());
 
-        Assert.assertEquals(sortedYears, years);
+        Assertions.assertEquals(sortedYears, years);
     }
 
     @Test
+    @DisplayName("Тест 5")
     public void deleteUserTest() {
         Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(204));
 
@@ -117,6 +137,8 @@ public class TestAPI {
     }
 
     @Test
+    @Disabled("Тестовое отключения теста")
+    @DisplayName("Тест 6")
     public void timeTest() {
         Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(200));
         UserTime user = new UserTime("morpheus", "zion resident");
@@ -130,6 +152,6 @@ public class TestAPI {
         String regexServer = "(.{6})$";
         String regexClient = "(.{12})$";
         String now = Instant.now().toString().replaceAll(regexClient, "");
-        Assert.assertEquals(now, time.getUpdatedAt().replaceAll(regexServer, ""));
+        Assertions.assertEquals(now, time.getUpdatedAt().replaceAll(regexServer, ""));
     }
 }

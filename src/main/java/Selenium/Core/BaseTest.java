@@ -7,8 +7,8 @@
 package Selenium.Core;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 abstract public class BaseTest {
     protected WebDriver driver;
 
-    @Before
+    @BeforeEach
     public void setUp() {
 //        Скачиваем chromeDriver и иницилизируем
         WebDriverManager.chromedriver().setup();
@@ -31,7 +31,7 @@ abstract public class BaseTest {
         BasePage.setDriver(driver);
     }
 
-    @After
+    @AfterEach
     public void tearDown(){
 //        Закрытия процесса webDriver
         driver.close();
