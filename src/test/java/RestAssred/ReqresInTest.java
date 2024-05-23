@@ -28,6 +28,9 @@ import RestAssred.request.Register;
 import RestAssred.request.UserTime;
 import RestAssred.response.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.Instant;
 import java.util.List;
@@ -36,7 +39,7 @@ import java.util.stream.Collectors;
 import static RestAssred.helper.ConfigProvider.*;
 import static io.restassured.RestAssured.given;
 
-public class TestAPI {
+public class ReqresInTest {
 
     private String afterEachInfo;
 
@@ -44,6 +47,7 @@ public class TestAPI {
     public void rename(){
         afterEachInfo = "Код срабатывает в начале каждого тестового метода" + Instant.now().toString();
     }
+
 
     @Test
     @DisplayName("Тест 1")
@@ -65,16 +69,22 @@ public class TestAPI {
         }
     }
 
-    @Test
+
+//    @Test
     @DisplayName("Тест 2")
-    public void successRegTest(){
+    @ParameterizedTest
+    @CsvSource({                         // Parameterized test
+            "eve.holt@reqres.in,pistol", // pass
+            "eve.holt@reqre1.in,pisto3", // fail
+    })
+    public void successRegTest(String email, String password){
 
         System.out.println(afterEachInfo);
 
         Specification.installSpec(Specification.requestSpec(URL),Specification.responseSpec(200));
         Integer id = 4;
         String token = "QpwL5tke4Pnpja7X4";
-        Register user = new Register("eve.holt@reqres.in", "pistol");
+        Register user = new Register(email, password);
         SuccessReg successReg = given()
                 .body(user)
                 .when()
@@ -88,6 +98,7 @@ public class TestAPI {
         Assertions.assertEquals(id, successReg.getId());
         Assertions.assertEquals(token, successReg.getToken());
     }
+
 
     @Test
     @DisplayName("Тест 3")
@@ -109,6 +120,7 @@ public class TestAPI {
         Assertions.assertEquals("Missing password", unSuccessReg.getError());
     }
 
+
     @Test
     @DisplayName("Тест 4")
     public void sortedYearsTest() {
@@ -125,6 +137,7 @@ public class TestAPI {
         Assertions.assertEquals(sortedYears, years);
     }
 
+
     @Test
     @DisplayName("Тест 5")
     public void deleteUserTest() {
@@ -135,6 +148,7 @@ public class TestAPI {
                 .delete("/api/users/2")
                 .then().log().all();
     }
+
 
     @Test
     @Disabled("Тестовое отключения теста")
