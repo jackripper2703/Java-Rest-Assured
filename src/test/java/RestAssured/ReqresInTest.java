@@ -29,8 +29,6 @@ import RestAssured.api.response.*;
 import RestAssured.helper.Specification;
 import RestAssured.api.request.Register;
 import RestAssured.api.request.UserTime;
-import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit5.AllureJunit5;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
