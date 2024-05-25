@@ -29,7 +29,11 @@ import RestAssured.api.response.*;
 import RestAssured.helper.Specification;
 import RestAssured.api.request.Register;
 import RestAssured.api.request.UserTime;
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
+import io.qameta.allure.junit5.AllureJunit5;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -41,16 +45,14 @@ import static RestAssured.api.GetAccountBalance.AccountBalanceResponse.accountBa
 import static RestAssured.helper.ConfigProvider.*;
 import static RestAssured.helper.Specification.responseSpec;
 import static io.restassured.RestAssured.given;
+import org.junit.jupiter.api.Test;
 
 @Tag("API")
+@ExtendWith(AllureJunit5.class)
 public class ReqresInTest {
 
     public static String bearerToken = AuthRequest.getToken();
-//
-//    @BeforeAll
-//    static void initAll(){
-//        Specification.installSpecRequest(Specification.requestSpecificationAuth(URLVPLUSE,bearerToken));
-//    }
+
 
     @Test
     @DisplayName("Получение баланса")
@@ -63,7 +65,6 @@ public class ReqresInTest {
 
 
     @Test
-    @DisplayName("Тест 1")
     public void checkAvatarAndIdTest(){
         Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(200));
         List<UserDate> users = given()
@@ -80,7 +81,6 @@ public class ReqresInTest {
     }
 
 
-//    @Test
     @DisplayName("Тест 2")
     @ParameterizedTest
     @CsvSource({                         // Parameterized test
@@ -156,7 +156,6 @@ public class ReqresInTest {
 
 
     @Test
-//    @Disabled("Тестовое отключения теста")
     @DisplayName("Тест 6")
     public void timeTest() {
         Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(200));
