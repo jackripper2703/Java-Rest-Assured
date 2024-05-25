@@ -1,7 +1,8 @@
 package ParamTest;
 
-import RestAssred.helper.JsonHelper;
+import RestAssured.helper.JsonHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.stream.Stream;
 
 import static ParamTest.Worker.testPeoples;
@@ -38,7 +38,8 @@ public class ParamTest {
     }
 
     @Test
-    public void readJsonTest() throws IOException {
+    @SneakyThrows
+    public void readJsonTest(){
         ObjectMapper objectMapper = new ObjectMapper();
         File file = new File("src/main/resources/jack.json"); // Чтение json файлов
         Worker worker = objectMapper.readValue(file, Worker.class);
@@ -46,7 +47,8 @@ public class ParamTest {
     }
 
     @Test
-    public void readJsonTest2() throws IOException {
+    @SneakyThrows
+    public void readJsonTest2(){
         Worker worker = JsonHelper.fromJson("src/main/resources/jack.json", Worker.class);
         System.out.println(worker);
         String toJsonWorker = new Worker("Kit",27,"bilder").toString();

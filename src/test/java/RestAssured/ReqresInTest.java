@@ -21,41 +21,51 @@
  * обновления с текущей датой на машине
  */
 
-package RestAssred;
+package RestAssured;
 
-import RestAssred.helper.Specification;
-import RestAssred.request.Register;
-import RestAssred.request.UserTime;
-import RestAssred.response.*;
+import RestAssured.api.GetAccountBalance.AccountBalanceResponse;
+import RestAssured.api.PostAuthorizations.AuthRequest;
+import RestAssured.api.response.*;
+import RestAssured.helper.Specification;
+import RestAssured.api.request.Register;
+import RestAssured.api.request.UserTime;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static RestAssred.helper.ConfigProvider.*;
+import static RestAssured.api.GetAccountBalance.AccountBalanceResponse.accountBalanceResponse;
+import static RestAssured.helper.ConfigProvider.*;
+import static RestAssured.helper.Specification.responseSpec;
 import static io.restassured.RestAssured.given;
 
+@Tag("API")
 public class ReqresInTest {
 
-    private String afterEachInfo;
+    public static String bearerToken = AuthRequest.getToken();
+//
+//    @BeforeAll
+//    static void initAll(){
+//        Specification.installSpecRequest(Specification.requestSpecificationAuth(URLVPLUSE,bearerToken));
+//    }
 
-    @AfterEach
-    public void rename(){
-        afterEachInfo = "Код срабатывает в начале каждого тестового метода" + Instant.now().toString();
+    @Test
+    @DisplayName("Получение баланса")
+    public void accountBalanceTest() {
+        Specification.installSpecRequest(Specification.requestSpecificationAuth(URLVPLUSE,bearerToken));
+        Specification.installSpecResponse(responseSpec(200)); // Спецификация на response
+        AccountBalanceResponse balance = accountBalanceResponse();
+        Assertions.assertEquals(0, balance.getBalance());
     }
 
 
     @Test
     @DisplayName("Тест 1")
     public void checkAvatarAndIdTest(){
-
-        System.out.println(afterEachInfo);
-
-        Specification.installSpec(Specification.requestSpec(URL),Specification.responseSpec(200));
+        Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(200));
         List<UserDate> users = given()
                 .when()
                 .get("api/users?page=2")
@@ -79,9 +89,7 @@ public class ReqresInTest {
     })
     public void successRegTest(String email, String password){
 
-        System.out.println(afterEachInfo);
-
-        Specification.installSpec(Specification.requestSpec(URL),Specification.responseSpec(200));
+        Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(200));
         Integer id = 4;
         String token = "QpwL5tke4Pnpja7X4";
         Register user = new Register(email, password);
@@ -103,10 +111,7 @@ public class ReqresInTest {
     @Test
     @DisplayName("Тест 3")
     public void unSuccessRegTest() {
-
-        System.out.println(afterEachInfo);
-
-        Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(400));
+        Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(400));
         Register user = new Register("eve.holt@reqres.in", "");
         UnSuccessReg unSuccessReg = given()
                 .body(user)
@@ -124,7 +129,7 @@ public class ReqresInTest {
     @Test
     @DisplayName("Тест 4")
     public void sortedYearsTest() {
-        Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(200));
+        Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(200));
 
         List<ColorsData> colors = given()
                 .when()
@@ -141,7 +146,7 @@ public class ReqresInTest {
     @Test
     @DisplayName("Тест 5")
     public void deleteUserTest() {
-        Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(204));
+        Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(204));
 
         given()
                 .when()
@@ -151,10 +156,10 @@ public class ReqresInTest {
 
 
     @Test
-    @Disabled("Тестовое отключения теста")
+//    @Disabled("Тестовое отключения теста")
     @DisplayName("Тест 6")
     public void timeTest() {
-        Specification.installSpec(Specification.requestSpec(URL), Specification.responseSpec(200));
+        Specification.installSpec(Specification.requestSpecification(URLREQRES), responseSpec(200));
         UserTime user = new UserTime("morpheus", "zion resident");
         ServerTime time = given()
                 .body(user)
@@ -168,4 +173,5 @@ public class ReqresInTest {
         String now = Instant.now().toString().replaceAll(regexClient, "");
         Assertions.assertEquals(now, time.getUpdatedAt().replaceAll(regexServer, ""));
     }
+
 }

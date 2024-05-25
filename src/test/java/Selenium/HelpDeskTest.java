@@ -5,10 +5,12 @@ import Selenium.helpDesk.MainPage;
 import Selenium.helpDesk.TicketPage;
 import Selenium.helpers.TestValues;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static Selenium.helpers.StringModifier.UniqueString;
 
+@Tag("UI")
 public class HelpDeskTest extends BaseTest {
 
     @Test

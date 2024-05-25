@@ -1,6 +1,6 @@
-package RestAssred.response;
+package RestAssured.api.response;
 
-import RestAssred.request.UserTime;
+import RestAssured.api.request.UserTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
