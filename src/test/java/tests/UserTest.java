@@ -1,59 +1,40 @@
 package tests;
 
-import RestAssured.helper.CustomTml;
+import RestAssured.decorator.AdminUser;
+import RestAssured.decorator.AdminUserResolver;
 import RestAssured.models.FullUser;
-import RestAssured.services.UserService;
 import io.qameta.allure.*;
-import io.restassured.RestAssured;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.*;
 
 import static RestAssured.assertions.Conditions.hasInfo;
 import static RestAssured.assertions.Conditions.hasStatusCode;
-import static RestAssured.helper.ConfigProvider.URL;
+import static RestAssured.helper.RandomTestData.*;
 
 @Tag("USER")
-public class UserTest {
-    private static Random random;
-    private static UserService userService;
+@Owner("Семионов Константин")
+@ExtendWith(AdminUserResolver.class)
+public class UserTest extends BaseApiTest {
 
-    @BeforeAll
-    public static void setUp() {
-        RestAssured.baseURI = URL;
-        RestAssured.filters(
-                new RequestLoggingFilter(),
-                new ResponseLoggingFilter(),
-                CustomTml.customLogFilter().withCustomTemplates());
-        random = new Random();
-        userService = new UserService();
-    }
-
-    @Step("Создания нового пользователя с логином (Jack + Рандомное число) и паролем (Ripper)")
-    private FullUser getRandomUser() {
-        int randomNumber = Math.abs(random.nextInt());
-        return FullUser.builder()
-                .login("Jack" + randomNumber)
-                .pass("Ripper")
-                .build();
-    }
-
-    private FullUser getAdmin() {
-        return FullUser.builder()
-                .login("admin")
-                .pass("admin")
-                .build();
-    }
 
     @Test
     @Severity(SeverityLevel.BLOCKER) //    Возможные значения: BLOCKER, CRITICAL, NORMAL, MINOR, TRIVIAL.
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/addUserUsingPOST")
-    @DisplayName("[POSITIVE] Регистрация пользователя")
+    @DisplayName("[POSITIVE] Регистрация пользователя без игр")
     public void positiveRegistrationTest() {
-        FullUser user = getRandomUser();
+        userService.register(user)
+                .should(hasStatusCode(201))
+                .should(hasInfo("success", "User created"));
+    }
+
+    @Test
+    @Severity(SeverityLevel.BLOCKER)
+    @Issue("user-controller-new/addUserUsingPOST")
+    @DisplayName("[POSITIVE] Регистрация пользователя с игрой")
+    public void positiveRegisterWithGameTest() {
+        user = getRandomUserWithGames();
         userService.register(user)
                 .should(hasStatusCode(201))
                 .should(hasInfo("success", "User created"));
@@ -61,11 +42,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/addUserUsingPOST")
     @DisplayName("[NEGATIVE] Регистрация пользователя для существующего логина")
     public void negativeRegistrationExistsTest() {
-        FullUser user = getRandomUser();
         userService.register(user)
                 .should(hasStatusCode(201))
                 .should(hasInfo("success", "User created"));
@@ -77,11 +56,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/addUserUsingPOST")
     @DisplayName("[NEGATIVE] Регистрация пользователя без пароля")
     public void negativeRegistrationNoPassTest() {
-        FullUser user = getRandomUser();
         user.setPass(null);
         userService.register(user)
                 .should(hasStatusCode(400))
@@ -90,11 +67,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("createAuthenticationTokenUsingPOST")
     @DisplayName("[POSITIVE] Получение JWT токена для Админа")
-    public void positiveAdminAuthTest() {
-        FullUser user = getAdmin();
+    public void positiveAdminAuthTest(@AdminUser FullUser user) {
         String token = userService.auth(user)
                 .should(hasStatusCode(200))
                 .asJwt();
@@ -103,11 +78,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("createAuthenticationTokenUsingPOST")
     @DisplayName("[POSITIVE] Получение JWT токена для нового пользователя")
     public void positiveNewUserAuthTest() {
-        FullUser user = getRandomUser();
         userService.register(user);
         String token = userService.auth(user)
                 .should(hasStatusCode(200)).asJwt();
@@ -116,12 +89,10 @@ public class UserTest {
 
 
     @Test
-    @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
+    @Severity(SeverityLevel.NORMAL)
     @Issue("createAuthenticationTokenUsingPOST")
     @DisplayName("[NEGATIVE] Получение JWT токена для не зарегистированого пользователя")
     public void negativeNewUserAuthTest() {
-        FullUser user = getRandomUser();
         userService.auth(user)
                 .should(hasStatusCode(401));
     }
@@ -129,11 +100,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/getUserUsingGET")
     @DisplayName("[POSITIVE] Получения информации о пользователе")
-    public void positiveGetUserInfoTest() {
-        FullUser user = getAdmin();
+    public void positiveGetUserInfoTest(@AdminUser FullUser user) {
         String token = userService.auth(user)
                 .asJwt();
         userService.getUserInfo(token);
@@ -141,8 +110,7 @@ public class UserTest {
 
 
     @Test
-    @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
+    @Severity(SeverityLevel.MINOR)
     @Issue("user-controller-new/getUserUsingGET")
     @DisplayName("[NEGATIVE] Получения информации о пользователе передавая неверный токен")
     public void negativeGetUserInfoTest() {
@@ -153,7 +121,6 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/getUserUsingGET")
     @DisplayName("[NEGATIVE] Получения информации о пользователе не передавая токен")
     public void negativeGetUserInfoNotToketTest() {
@@ -164,11 +131,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("updateUserPasswordUsingPUT")
     @DisplayName("[POSITIVE] Обновление пароля у пользователя")
     public void positiveChangeUserPassTest() {
-        FullUser user = getRandomUser();
         userService.register(user);
         String token = userService.auth(user).asJwt();
         userService.getUserInfo(token);
@@ -187,11 +152,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("updateUserPasswordUsingPUT")
     @DisplayName("[NEGATIVE] Смена пароля у админа")
-    public void negativeChangeAdminPassTest() {
-        FullUser user = getAdmin();
+    public void negativeChangeAdminPassTest(@AdminUser FullUser user) {
         String token = userService.auth(user).asJwt();
         String newPass = "qwerty";
         userService.updatePass(newPass, token)
@@ -202,11 +165,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/deleteUserFromDbUsingDELETE")
     @DisplayName("[POSITIVE] Удаляет пользователя из Базы данных")
     public void positiveDeleteUserTest() {
-        FullUser user = getRandomUser();
         userService.register(user);
         String token = userService.auth(user)
                 .should(hasStatusCode(200))
@@ -221,11 +182,9 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/deleteUserFromDbUsingDELETE")
     @DisplayName("[NEGATIVE] Удаления админа")
-    public void negativeDeleteAdminTest() {
-        FullUser user = getAdmin();
+    public void negativeDeleteAdminTest(@AdminUser FullUser user) {
         String token = userService.auth(user)
                 .asJwt();
         userService.deleteUser(token)
@@ -236,7 +195,6 @@ public class UserTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Owner("Семионов Константин")
     @Issue("user-controller-new/getLast100UsersUsingGET")
     @DisplayName("[POSITIVE] Показывает логины последних 100 зарегистрированных пользователей")
     public void positiveUsersListTest() {

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SimilarDlc {
 
     @JsonProperty("isFree")
-    private boolean isFree;
+    private Boolean isFree;
 
     @JsonProperty("dlcNameFromAnotherGame")
     private String dlcNameFromAnotherGame;

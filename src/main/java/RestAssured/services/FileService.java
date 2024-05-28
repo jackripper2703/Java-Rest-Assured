@@ -15,12 +15,12 @@ public class FileService {
 
 
     @Step("Скачивание файла")
-    public AssertableResponse downLoadBaseImage(){
+    public AssertableResponse downloadBaseImage(){
         return new AssertableResponse(given().get("files/download").then());
     }
 
     @Step("Скачивание последнего загруженного файла")
-    public AssertableResponse downLoadLastUploaded(){
+    public AssertableResponse downloadLastFile(){
         return new AssertableResponse(given().get("files/downloadLastUploaded").then());
     }
 
