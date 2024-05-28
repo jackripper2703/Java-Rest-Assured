@@ -10,10 +10,6 @@ public interface ConfigProvider {
         return ConfigFactory.load("application.conf");
     }
 
-    String URLREQRES = config.getString("urlReqres");
-    String URLVPLUSE = config.getString("urlVpluse");
-
-    String PHONE_NUMBER = config.getString("phoneNumber");
-    String PASSWORD = config.getString("password");
+    String URL = config.getString("url");
 }
 

@@ -10,11 +10,11 @@ public class JsonHelper {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static <T> T fromJson (String JsonPath, Class<T> out) throws IOException {
+    public static <T> T fromJson(String JsonPath, Class<T> out) throws IOException {
         return MAPPER.readValue(new File(JsonPath), out);
     }
 
-    public static String toJson (Object object) throws JsonProcessingException {
+    public static String toJson(Object object) throws JsonProcessingException {
         return MAPPER.writeValueAsString(object);
     }
 }
