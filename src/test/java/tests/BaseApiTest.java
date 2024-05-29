@@ -2,7 +2,6 @@ package tests;
 
 import RestAssured.decorator.AdminUserResolver;
 import RestAssured.decorator.LoginExtension;
-import RestAssured.helper.CustomTml;
 import RestAssured.models.FullUser;
 import RestAssured.services.FileService;
 import RestAssured.services.UserService;
@@ -15,6 +14,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static RestAssured.helper.ConfigProvider.URL;
+import static RestAssured.helper.CustomTml.customLogFilter;
+import static RestAssured.helper.CustomTml.isCustomLogAdded;
 import static RestAssured.helper.RandomTestData.getRandomUser;
 import static org.hamcrest.Matchers.*;
 
@@ -36,10 +37,12 @@ public class BaseApiTest {
         // Настраиваем общие параметры для всех запросов
         RestAssured.responseSpecification = responseSpec;
         RestAssured.baseURI = URL; // Устанавливаем базовый URL для запросов
+        if (!isCustomLogAdded()){ // Проверка включалось ли логирование
         RestAssured.filters(
                 new RequestLoggingFilter(), // Логирование запросов
                 new ResponseLoggingFilter(), // Логирование ответов
-                CustomTml.customLogFilter().withCustomTemplates()); // Использование кастомных шаблонов для логирования
+                customLogFilter().withCustomTemplates());  // Использование кастомных шаблонов для логирования
+        }
         // Инициализация сервисов
         userService = new UserService();
         fileService = new FileService();
