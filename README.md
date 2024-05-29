@@ -29,7 +29,7 @@
     ```
 2. Перейдите в директорию проекта:
     ```bash
-    cd rest-assured-api-testing
+    cd Java-Rest-Assured
     ```
 3. Установите зависимости:
     ```bash
