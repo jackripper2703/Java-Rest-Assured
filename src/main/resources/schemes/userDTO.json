@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "register_data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "login": {
+          "type": "string"
+        },
+        "pass": {
+          "type": "string"
+        },
+        "games": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "gameId": {
+                "type": "integer"
+              },
+              "title": {
+                "type": "string"
+              },
+              "genre": {
+                "type": "string"
+              },
+              "requiredAge": {
+                "type": "boolean"
+              },
+              "isFree": {
+                "type": "boolean"
+              },
+              "price": {
+                "type": "number"
+              },
+              "company": {
+                "type": "string"
+              },
+              "publish_date": {
+                "type": "string"
+              },
+              "rating": {
+                "type": "integer"
+              },
+              "description": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "dlcs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "isDlcFree": {
+                      "type": "boolean"
+                    },
+                    "dlcName": {
+                      "type": "string"
+                    },
+                    "rating": {
+                      "type": "integer"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "similarDlc": {
+                      "type": "object",
+                      "properties": {
+                        "dlcNameFromAnotherGame": {
+                          "type": "string"
+                        },
+                        "isFree": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "dlcNameFromAnotherGame",
+                        "isFree"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "isDlcFree",
+                    "dlcName",
+                    "rating",
+                    "description",
+                    "price",
+                    "similarDlc"
+                  ]
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "properties": {
+                  "osName": {
+                    "type": "string"
+                  },
+                  "ramGb": {
+                    "type": "integer"
+                  },
+                  "hardDrive": {
+                    "type": "integer"
+                  },
+                  "videoCard": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "osName",
+                  "ramGb",
+                  "hardDrive",
+                  "videoCard"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "gameId",
+              "title",
+              "genre",
+              "requiredAge",
+              "isFree",
+              "price",
+              "company",
+              "publish_date",
+              "rating",
+              "description",
+              "tags",
+              "dlcs",
+              "requirements"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "login",
+        "pass",
+        "games"
+      ]
+    },
+    "info": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "message"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "register_data",
+    "info"
+  ]
+}

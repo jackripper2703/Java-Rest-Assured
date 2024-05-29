@@ -9,8 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.*;
 
-import static RestAssured.assertions.Conditions.hasInfo;
-import static RestAssured.assertions.Conditions.hasStatusCode;
+import static RestAssured.assertions.Conditions.*;
 import static RestAssured.helper.RandomTestData.*;
 
 @Tag("USER")
@@ -25,6 +24,7 @@ public class UserTest extends BaseApiTest {
     @DisplayName("[POSITIVE] Регистрация пользователя без игр")
     public void positiveRegistrationTest() {
         userService.register(user)
+                .should(matchesSchema("userDTO.json"))
                 .should(hasStatusCode(201))
                 .should(hasInfo("success", "User created"));
     }
@@ -36,6 +36,7 @@ public class UserTest extends BaseApiTest {
     public void positiveRegisterWithGameTest() {
         user = getRandomUserWithGames();
         userService.register(user)
+                .should(matchesSchema("userDTO.json"))
                 .should(hasStatusCode(201))
                 .should(hasInfo("success", "User created"));
     }
@@ -47,6 +48,7 @@ public class UserTest extends BaseApiTest {
     public void negativeRegistrationExistsTest() {
         userService.register(user)
                 .should(hasStatusCode(201))
+                .should(matchesSchema("userDTO.json"))
                 .should(hasInfo("success", "User created"));
         userService.register(user)
                 .should(hasStatusCode(400))
@@ -105,7 +107,8 @@ public class UserTest extends BaseApiTest {
     public void positiveGetUserInfoTest(@AdminUser FullUser user) {
         String token = userService.auth(user)
                 .asJwt();
-        userService.getUserInfo(token);
+        userService.getUserInfo(token)
+                .should(matchesSchema("info.json"));
     }
 
 
@@ -131,7 +134,7 @@ public class UserTest extends BaseApiTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Issue("updateUserPasswordUsingPUT")
+    @Issue("user-controller-new/updateUserPasswordUsingPUT")
     @DisplayName("[POSITIVE] Обновление пароля у пользователя")
     public void positiveChangeUserPassTest() {
         userService.register(user);
@@ -152,7 +155,7 @@ public class UserTest extends BaseApiTest {
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
-    @Issue("updateUserPasswordUsingPUT")
+    @Issue("user-controller-new/updateUserPasswordUsingPUT")
     @DisplayName("[NEGATIVE] Смена пароля у админа")
     public void negativeChangeAdminPassTest(@AdminUser FullUser user) {
         String token = userService.auth(user).asJwt();
@@ -198,7 +201,9 @@ public class UserTest extends BaseApiTest {
     @Issue("user-controller-new/getLast100UsersUsingGET")
     @DisplayName("[POSITIVE] Показывает логины последних 100 зарегистрированных пользователей")
     public void positiveUsersListTest() {
-        List<String> users = userService.getAllUsers().asList(String.class);
+        List<String> users = userService.getAllUsers()
+                .should(matchesSchema("allUsers.json"))
+                .asList(String.class);
         Assertions.assertTrue(users.size() > 3);
     }
 }
