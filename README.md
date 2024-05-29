@@ -25,11 +25,11 @@
 
 1. Клонируйте репозиторий:
     ```bash
-    git clone https://github.com/jackripper2703/testJava.git
+    git clone https://github.com/jackripper2703/Java-Rest-Assured.git
     ```
 2. Перейдите в директорию проекта:
     ```bash
-    cd rest-assured-api-testing
+    cd Java-Rest-Assured
     ```
 3. Установите зависимости:
     ```bash
