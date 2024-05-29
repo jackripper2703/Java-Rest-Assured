@@ -1,6 +1,5 @@
 package RestAssured.services;
 
-
 import RestAssured.assertions.AssertableResponse;
 import RestAssured.models.FullUser;
 import RestAssured.models.JwtAuthData;
@@ -16,58 +15,65 @@ public class UserService {
 
     @Step("Регистрация пользователя в системе")
     public AssertableResponse register(FullUser user) {
-        return new AssertableResponse(given().contentType(ContentType.JSON)
-                .body(user)
-                .post("/signup")
-                .then());
+        // Метод для регистрации нового пользователя в системе
+        return new AssertableResponse(given().contentType(ContentType.JSON) // Указываем, что тело запроса в формате JSON
+                .body(user) // Передаем тело запроса, содержащее информацию о пользователе
+                .post("/signup") // Выполняем POST-запрос на эндпоинт /signup
+                .then()); // Возвращаем результат запроса
     }
 
-    @Step("Получения информации о пользователя через токен")
+    @Step("Получение информации о пользователе через токен")
     public AssertableResponse getUserInfo(String jwt) {
-        return new AssertableResponse(given().auth().oauth2(jwt)
-                .get("/user")
-                .then());
+        // Метод для получения информации о пользователе с использованием JWT токена
+        return new AssertableResponse(given().auth().oauth2(jwt) // Добавляем токен в заголовок запроса для авторизации
+                .get("/user") // Выполняем GET-запрос на эндпоинт /user
+                .then()); // Возвращаем результат запроса
     }
 
-    @Step("Получения информации о пользователя без токена")
+    @Step("Получение информации о пользователе без токена")
     public AssertableResponse getUserInfo() {
+        // Метод для получения информации о пользователе без использования токена
         return new AssertableResponse(given()
-                .get("/user")
-                .then());
+                .get("/user") // Выполняем GET-запрос на эндпоинт /user
+                .then()); // Возвращаем результат запроса
     }
 
-    @Step("Обновления пароля на {newPassword}")
+    @Step("Обновление пароля на {newPassword}")
     public AssertableResponse updatePass(String newPassword, String jwt) {
-        Map<String, String> password = new HashMap<>();
-        password.put("password", newPassword);
+        // Метод для обновления пароля пользователя
+        Map<String, String> password = new HashMap<>(); // Создаем карту для нового пароля
+        password.put("password", newPassword); // Добавляем новый пароль в карту
 
-        return new AssertableResponse(given().contentType(ContentType.JSON)
-                .auth().oauth2(jwt)
-                .body(password)
-                .put("/user")
-                .then());
+        return new AssertableResponse(given().contentType(ContentType.JSON) // Указываем, что тело запроса в формате JSON
+                .auth().oauth2(jwt) // Добавляем токен в заголовок запроса для авторизации
+                .body(password) // Передаем тело запроса, содержащее новый пароль
+                .put("/user") // Выполняем PUT-запрос на эндпоинт /user
+                .then()); // Возвращаем результат запроса
     }
 
     @Step("Удаление пользователя")
     public AssertableResponse deleteUser(String jwt) {
-        return new AssertableResponse(given().auth().oauth2(jwt)
-                .delete("/user")
-                .then());
+        // Метод для удаления пользователя
+        return new AssertableResponse(given().auth().oauth2(jwt) // Добавляем токен в заголовок запроса для авторизации
+                .delete("/user") // Выполняем DELETE-запрос на эндпоинт /user
+                .then()); // Возвращаем результат запроса
     }
 
     @Step("Авторизация для получения токена")
     public AssertableResponse auth(FullUser fullUser) {
-        JwtAuthData data = new JwtAuthData(fullUser.getLogin(), fullUser.getPass());
-        return new AssertableResponse(given().contentType(ContentType.JSON)
-                .body(data)
-                .post("/login")
-                .then());
+        // Метод для авторизации пользователя и получения JWT токена
+        JwtAuthData data = new JwtAuthData(fullUser.getLogin(), fullUser.getPass()); // Создаем объект с данными для авторизации
+        return new AssertableResponse(given().contentType(ContentType.JSON) // Указываем, что тело запроса в формате JSON
+                .body(data) // Передаем тело запроса, содержащее данные для авторизации
+                .post("/login") // Выполняем POST-запрос на эндпоинт /login
+                .then()); // Возвращаем результат запроса
     }
 
-    @Step("Получения списка пользователей")
+    @Step("Получение списка пользователей")
     public AssertableResponse getAllUsers() {
+        // Метод для получения списка всех пользователей
         return new AssertableResponse(given()
-                .get("/users")
-                .then());
+                .get("/users") // Выполняем GET-запрос на эндпоинт /users
+                .then()); // Возвращаем результат запроса
     }
 }
