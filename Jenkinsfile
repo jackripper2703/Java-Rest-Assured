@@ -10,24 +10,23 @@ timeout(30) {
             ]]
         ])
 
-        def testResult = bat(returnStatus: true, script: """
-            mkdir newfolder
-            mvn test
-        """)
-
-        // Всегда генерировать отчеты Allure, даже если тесты не прошли
-        allure([
-            includeProperties: true,
-            jdk: '',
-            properties: [],
-            reportBuildPolicy: 'ALWAYS',
-            results: [[path: 'target/allure-results']]
-        ])
-
-        // Проверка результата тестов
-        if (testResult != 0) {
-            echo "Есть ошибки в тестах. Проверьте отчеты для получения подробной информации."
-            currentBuild.result = 'UNSTABLE' // Отмечаем сборку как нестабильную, если тесты не прошли
+        try {
+            bat """
+                mkdir newfolder
+                mvn test
+            """
+        } catch (Exception e) {
+            echo "Тесты завершились с ошибками, но продолжим выполнение для генерации отчета Allure."
+            currentBuild.result = 'UNSTABLE' // Помечаем сборку как нестабильную, если тесты не прошли
+        } finally {
+            // Всегда генерируем Allure отчет
+            allure([
+                includeProperties: true,
+                jdk: '',
+                properties: [],
+                reportBuildPolicy: 'ALWAYS',
+                results: [[path: 'target/allure-results']]
+            ])
         }
     }
 }
