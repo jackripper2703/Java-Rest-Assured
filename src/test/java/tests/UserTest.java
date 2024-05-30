@@ -50,7 +50,7 @@ public class UserTest extends BaseApiTest {
                 .should(matchesSchema("userDTO.json"))
                 .should(hasInfo("success", "User created"));
         userService.register(user) // Повторная регистрация того же пользователя
-                .should(hasStatusCode(400)) // Проверка статуса ответа 400
+                .should(hasStatusCode(402)) // Проверка статуса ответа 400
                 .should(hasInfo("fail", "Login already exist")); // Проверка сообщения об ошибке
     }
 
