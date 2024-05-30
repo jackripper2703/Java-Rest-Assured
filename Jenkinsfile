@@ -10,18 +10,17 @@ timeout(30) {
             ]]
         ])
 
-      labelledShell(label: 'Run Tests' , script: '''
+        bat """
             mkdir newfolder
-            chmod +x pom.xml
-            ./mvn test || echo
-            ''')
+            mvn test
+        """
 
         allure([
             includeProperties: true,
-            jdk : '',
+            jdk: '',
             properties: [],
             reportBuildPolicy: 'ALWAYS',
-            results : [[path: 'target/allure-results']]
+            results: [[path: 'target/allure-results']]
         ])
     }
 }
