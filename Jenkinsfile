@@ -10,10 +10,10 @@ timeout(30) {
             ]]
         ])
 
+        // Команды для Windows
         bat '''
         mkdir newfolder
-        chmod +x pom.xml
-        ./mvn test || echo
+        mvn test || echo
         '''
 
         allure([
