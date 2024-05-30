@@ -10,11 +10,11 @@ timeout(30) {
             ]]
         ])
 
-        // Команды для Windows
-        bat '''
-        mkdir newfolder
-        mvn test || echo
-        '''
+      labelledShell(label: 'Run Tests' , script: '''
+            mkdir newfolder
+            chmod +x pom.xml
+            ./mvn test || echo
+            ''')
 
         allure([
             includeProperties: true,
