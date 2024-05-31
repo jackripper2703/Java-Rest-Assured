@@ -39,8 +39,8 @@ public class BaseApiTest {
         RestAssured.baseURI = URL; // Устанавливаем базовый URL для запросов
         if (!isCustomLogAdded()){ // Проверка включалось ли логирование
         RestAssured.filters(
-                new RequestLoggingFilter(), // Логирование запросов
-                new ResponseLoggingFilter(), // Логирование ответов
+//                new RequestLoggingFilter(), // Логирование запросов
+//                new ResponseLoggingFilter(), // Логирование ответов
                 customLogFilter().withCustomTemplates());  // Использование кастомных шаблонов для логирования
         }
         // Инициализация сервисов
