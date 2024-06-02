@@ -16,9 +16,10 @@ public class UserService {
     @Step("Регистрация пользователя в системе")
     public AssertableResponse register(FullUser user) {
         // Метод для регистрации нового пользователя в системе
-        return new AssertableResponse(given().contentType(ContentType.JSON) // Указываем, что тело запроса в формате JSON
+        return new AssertableResponse(given()
+                .contentType(ContentType.JSON) // Указываем, что тело запроса в формате JSON
                 .body(user) // Передаем тело запроса, содержащее информацию о пользователе
-                .post("/signup") // Выполняем POST-запрос на эндпоинт /signup
+                .post("/api/signup") // Выполняем POST-запрос на эндпоинт /signup
                 .then()); // Возвращаем результат запроса
     }
 
@@ -26,7 +27,7 @@ public class UserService {
     public AssertableResponse getUserInfo(String jwt) {
         // Метод для получения информации о пользователе с использованием JWT токена
         return new AssertableResponse(given().auth().oauth2(jwt) // Добавляем токен в заголовок запроса для авторизации
-                .get("/user") // Выполняем GET-запрос на эндпоинт /user
+                .get("/api/user") // Выполняем GET-запрос на эндпоинт /user
                 .then()); // Возвращаем результат запроса
     }
 
@@ -34,7 +35,7 @@ public class UserService {
     public AssertableResponse getUserInfo() {
         // Метод для получения информации о пользователе без использования токена
         return new AssertableResponse(given()
-                .get("/user") // Выполняем GET-запрос на эндпоинт /user
+                .get("/api/user") // Выполняем GET-запрос на эндпоинт /user
                 .then()); // Возвращаем результат запроса
     }
 
@@ -47,7 +48,7 @@ public class UserService {
         return new AssertableResponse(given().contentType(ContentType.JSON) // Указываем, что тело запроса в формате JSON
                 .auth().oauth2(jwt) // Добавляем токен в заголовок запроса для авторизации
                 .body(password) // Передаем тело запроса, содержащее новый пароль
-                .put("/user") // Выполняем PUT-запрос на эндпоинт /user
+                .put("/api/user") // Выполняем PUT-запрос на эндпоинт /user
                 .then()); // Возвращаем результат запроса
     }
 
@@ -55,7 +56,7 @@ public class UserService {
     public AssertableResponse deleteUser(String jwt) {
         // Метод для удаления пользователя
         return new AssertableResponse(given().auth().oauth2(jwt) // Добавляем токен в заголовок запроса для авторизации
-                .delete("/user") // Выполняем DELETE-запрос на эндпоинт /user
+                .delete("/api/user") // Выполняем DELETE-запрос на эндпоинт /user
                 .then()); // Возвращаем результат запроса
     }
 
@@ -65,7 +66,7 @@ public class UserService {
         JwtAuthData data = new JwtAuthData(fullUser.getLogin(), fullUser.getPass()); // Создаем объект с данными для авторизации
         return new AssertableResponse(given().contentType(ContentType.JSON) // Указываем, что тело запроса в формате JSON
                 .body(data) // Передаем тело запроса, содержащее данные для авторизации
-                .post("/login") // Выполняем POST-запрос на эндпоинт /login
+                .post("/api/login") // Выполняем POST-запрос на эндпоинт /login
                 .then()); // Возвращаем результат запроса
     }
 
@@ -73,7 +74,7 @@ public class UserService {
     public AssertableResponse getAllUsers() {
         // Метод для получения списка всех пользователей
         return new AssertableResponse(given()
-                .get("/users") // Выполняем GET-запрос на эндпоинт /users
+                .get("/api/users") // Выполняем GET-запрос на эндпоинт /users
                 .then()); // Возвращаем результат запроса
     }
 }

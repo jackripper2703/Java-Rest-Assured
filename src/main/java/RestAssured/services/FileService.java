@@ -16,7 +16,7 @@ public class FileService {
     public AssertableResponse downloadBaseImage() {
         // Метод для скачивания базового изображения
         return new AssertableResponse(given()
-                .get("files/download") // Выполняем GET-запрос на эндпоинт /files/download
+                .get("/api/files/download") // Выполняем GET-запрос на эндпоинт /files/download
                 .then()); // Возвращаем результат запроса
     }
 
@@ -24,7 +24,7 @@ public class FileService {
     public AssertableResponse downloadLastFile() {
         // Метод для скачивания последнего загруженного файла
         return new AssertableResponse(given()
-                .get("files/downloadLastUploaded") // Выполняем GET-запрос на эндпоинт /files/downloadLastUploaded
+                .get("/api/files/downloadLastUploaded") // Выполняем GET-запрос на эндпоинт /files/downloadLastUploaded
                 .then()); // Возвращаем результат запроса
     }
 
@@ -34,7 +34,7 @@ public class FileService {
         // Метод для загрузки файла
         return new AssertableResponse(given().contentType(ContentType.MULTIPART) // Указываем, что тело запроса в формате multipart/form-data
                 .multiPart("file", "myFile.jpg", Files.readAllBytes(file.toPath())) // Добавляем файл в тело запроса
-                .post("files/upload") // Выполняем POST-запрос на эндпоинт /files/upload
+                .post("/api/files/upload") // Выполняем POST-запрос на эндпоинт /files/upload
                 .then()); // Возвращаем результат запроса
     }
 }

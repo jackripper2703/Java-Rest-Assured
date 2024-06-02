@@ -10,7 +10,9 @@ public class StatusCodeService {
 
     @Step("Дергаем ручку /api/bad-request")
     public AssertableResponse endpointGet(String endpoint) {
-        return new AssertableResponse(given().contentType(ContentType.JSON)
+        return new AssertableResponse(given()
+                .redirects().follow(false)
+                .contentType(ContentType.JSON)
                 .get(endpoint)
                 .then());
     }
