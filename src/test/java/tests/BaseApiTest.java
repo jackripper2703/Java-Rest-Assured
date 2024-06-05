@@ -7,6 +7,7 @@ import RestAssured.services.FileService;
 import RestAssured.services.GameService;
 import RestAssured.services.StatusCodeService;
 import RestAssured.services.UserService;
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -33,6 +34,7 @@ public class BaseApiTest {
     protected static GameService gameService;
     protected static StatusCodeService statusCodeService;
     protected FullUser user;
+    protected static boolean isUserRegistered = false;
 
     @BeforeAll
     public static void setUp() {
@@ -54,17 +56,20 @@ public class BaseApiTest {
     @BeforeEach
     public void initTestUser() {
         user = getRandomUser();
+        isUserRegistered = false;
     }
 
-//    @AfterEach
-//    public void deleteTestUser() {
-//        try {
-//            String token = userService.auth(user).asJwt();
-//            if (token != null) {
-//                userService.deleteUser(token);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace(); // Логируем исключение
-//        }
-//    }
+    @AfterEach
+    public void deleteTestUser() {
+        if (isUserRegistered) { // Проверка, зарегистрирован ли пользователь
+            try {
+                String token = userService.auth(user).asJwt();
+                if (token != null) {
+                    userService.deleteUser(token);
+                }
+            } catch (Exception e) {
+                e.printStackTrace(); // Логируем исключение
+            }
+        }
+    }
 }

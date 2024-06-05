@@ -22,6 +22,7 @@ public class UserTest extends BaseApiTest {
     @Issue("user-controller-new/addUserUsingPOST") // Ссылка на тест-кейс в системе управления задачами
     @DisplayName("[POSITIVE] Регистрация пользователя без игр") // Читаемое имя теста для отображения в отчете
     public void positiveRegistrationTest() {
+        isUserRegistered = true;
         userService.register(user) // Регистрация пользователя
                 .should(matchesSchema("userDTO.json")) // Проверка соответствия JSON схеме
                 .should(hasStatusCode(201)) // Проверка статуса ответа 201
@@ -33,6 +34,7 @@ public class UserTest extends BaseApiTest {
     @Issue("user-controller-new/addUserUsingPOST")
     @DisplayName("[POSITIVE] Регистрация пользователя с игрой")
     public void positiveRegisterWithGameTest() {
+        isUserRegistered = true;
         user = getRandomUserWithGames(); // Генерация пользователя с играми
         userService.register(user) // Регистрация пользователя
                 .should(matchesSchema("userDTO.json"))
@@ -81,6 +83,7 @@ public class UserTest extends BaseApiTest {
     @Issue("createAuthenticationTokenUsingPOST")
     @DisplayName("[POSITIVE] Получение JWT токена для нового пользователя")
     public void positiveNewUserAuthTest() {
+        isUserRegistered = true;
         userService.register(user); // Регистрация нового пользователя
         String token = userService.auth(user) // Аутентификация пользователя
                 .should(hasStatusCode(200)) // Проверка статуса ответа 200
@@ -131,6 +134,7 @@ public class UserTest extends BaseApiTest {
     @Issue("user-controller-new/updateUserPasswordUsingPUT")
     @DisplayName("[POSITIVE] Обновление пароля у пользователя")
     public void positiveChangeUserPassTest() {
+        isUserRegistered = true;
         userService.register(user); // Регистрация пользователя
         String token = userService.auth(user).asJwt(); // Аутентификация пользователя
         userService.getUserInfo(token); // Получение информации о пользователе
